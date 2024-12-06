@@ -4,7 +4,6 @@ import random
 import time
 import json
 
-# Store ASCII art pictures with their rarities
 pictures = [
     {"art": """
        (\_/)
@@ -46,10 +45,8 @@ pictures = [
        \  /\
        `-'
     """, "rarity": "unusual"},
-    # ... (Add more pictures with different rarities)
 ]
 
-# Rarity probabilities
 rarities = {
     "common": 50000,
     "uncommon": 20000,
@@ -69,27 +66,22 @@ rarities = {
     "divine": 10,
     "mythic": 2,
     "super mythic": 1,
-    "ultra mythic": 0.6666  # Approximated
+    "ultra mythic": 0.6666 
 }
 
 def get_random_picture():
     global rarities
 
-    if not pictures:  # Check if the pictures list is empty
+    if not pictures: 
         return None
 
     try:
-        # Use random.choices with weights based on rarity probabilities
         picture = random.choices(pictures, weights=[rarities[p["rarity"]] for p in pictures])[0]
     except KeyError:
-        # Handle the case where a rarity name is not found in the rarities dictionary
         print("Error: Invalid rarity name found in pictures list.")
         return None
 
-    # Add "cracked" effect for rarities below exceptional
     if rarities[picture["rarity"]] > 2000:
-        # Implement your "cracking" effect here
-        # For example, you could replace some characters with " " or "_"
         pass
 
     return picture
@@ -101,8 +93,8 @@ def show_picture():
     if time.time() - last_picture_time >= 60:
         new_picture = get_random_picture()
         if new_picture:
-            picture_text.delete("1.0", tk.END)  # Clear previous content
-            picture_text.insert(tk.END, new_picture["art"])  # Insert new picture
+            picture_text.delete("1.0", tk.END)  
+            picture_text.insert(tk.END, new_picture["art"]) 
             if keep_art:
                 try:
                     current_rarity = rarities[rarity_label.cget("text").split(": ")[-1]]
@@ -175,7 +167,6 @@ def close_game():
 def open_minigames():
     pass
 
-# Initialize Tkinter
 root = tk.Tk()
 root.title("ASCII Art Collector")
 root.geometry("300x500")
@@ -185,26 +176,21 @@ bg_color = "white"
 keep_art = False
 root.config(bg=bg_color)
 
-# Load saved game data
 elapsed_time = 0
 last_picture_time = time.time()
 load_game()
 
-# Picture display
-picture_text = tk.Text(root, font=("Courier New", 16), width=30, height=10)  # Use Text widget
+picture_text = tk.Text(root, font=("Courier New", 16), width=30, height=10) 
 picture_text.pack(pady=20)
 rarity_label = tk.Label(root, text="", bg=bg_color)
 rarity_label.pack()
 
-# Timer
 timer_label = tk.Label(root, text=f"Time played: {elapsed_time // 60} minutes {elapsed_time % 60} seconds", bg=bg_color)
 timer_label.pack(pady=20)
 
-# Create a frame to hold the buttons
 button_frame = tk.Frame(root, bg=bg_color)
 button_frame.pack(side="bottom", fill="x")
 
-# Buttons
 settings_button = tk.Button(button_frame, text="Settings", command=open_settings)
 settings_button.pack(side="left", padx=5, pady=5)
 
@@ -214,10 +200,8 @@ close_button.pack(side="left", padx=5, pady=5)
 minigames_button = tk.Button(button_frame, text="Minigames", command=open_minigames)
 minigames_button.pack(side="left", padx=5, pady=5)
 
-# Start the game loop
 show_picture()
 
-# Save game on exit
 root.protocol("WM_DELETE_WINDOW", save_game)
 
 root.mainloop()
